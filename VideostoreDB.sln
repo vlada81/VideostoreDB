@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideostoreDB", "VideostoreDB\VideostoreDB.csproj", "{C91CAF2C-3AAB-41C7-86B8-26346013DBB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideostoreDB.Tests", "VideostoreDB.Tests\VideostoreDB.Tests.csproj", "{C00E163A-1355-4EE2-962A-D491D9AF31A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C91CAF2C-3AAB-41C7-86B8-26346013DBB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91CAF2C-3AAB-41C7-86B8-26346013DBB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91CAF2C-3AAB-41C7-86B8-26346013DBB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91CAF2C-3AAB-41C7-86B8-26346013DBB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C00E163A-1355-4EE2-962A-D491D9AF31A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C00E163A-1355-4EE2-962A-D491D9AF31A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C00E163A-1355-4EE2-962A-D491D9AF31A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C00E163A-1355-4EE2-962A-D491D9AF31A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E43EFF2B-6F4F-483C-A288-82FD16F50FCF}
+	EndGlobalSection
+EndGlobal
