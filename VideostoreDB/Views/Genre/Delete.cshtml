@@ -1,0 +1,18 @@
+﻿@model IEnumerable<VideostoreDB.Models.Genre>
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are You sure you want to delete:</h3>
+<div>
+    <h5>Genre: </h5>
+</div>
+<div>
+    @foreach (var g in Model)
+    {
+        <h5>@g.Name</h5>
+    }
+</div>

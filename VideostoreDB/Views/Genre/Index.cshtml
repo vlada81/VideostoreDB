@@ -1,0 +1,42 @@
+﻿@model IEnumerable<VideostoreDB.Models.Genre>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Movie Genres</h2>
+
+<div>
+    <h3><a class="btn btn-primary" href="/Genre/Create">Add new genre</a></h3>
+</div>
+<br />
+<div>
+    <table id="genre" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        @foreach (var genre in Model)
+        {
+            <tr>
+                <td>@genre.GenreId</td>
+                <td>@genre.Name</td>
+                <td>@Html.ActionLink("Edit", "Edit", new { id = genre.GenreId })</td>
+                <td>@Html.ActionLink("Delete", "Delete", new { id = genre.GenreId })</td>
+            </tr>
+        }
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#genre").DataTable();
+        });
+    </script>
+}
