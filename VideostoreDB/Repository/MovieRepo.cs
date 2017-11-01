@@ -14,7 +14,9 @@ namespace VideostoreDB.Repository.Interfaces
     public class MovieRepo : IMovieRepository
     {
         private SqlConnection conn;
-        private void connection()
+        private IGenreRepository genreRepo = new GenreRepo();
+
+        private void Connection()
         {
             string conString = ConfigurationManager.ConnectionStrings["VideostoreDBContext"].ToString();
             conn = new SqlConnection(conString);
@@ -26,15 +28,16 @@ namespace VideostoreDB.Repository.Interfaces
                                                 " @MovieReleaseDate);";
             query += " SELECT SCOPE_IDENTITY();";
 
-            connection();
+            Connection();
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@GenreId", movie.GenreId);
-                cmd.Parameters.AddWithValue("@MovieName", movie.Name);
-                cmd.Parameters.AddWithValue("@MoviePrice", movie.Price);
-                cmd.Parameters.AddWithValue("@MovieReleaseDate", movie.ReleaseDate);
+                cmd.Parameters.AddWithValue("GenreId", movie.Genre.GenreId);
+                cmd.Parameters.AddWithValue("MovieName", movie.Name);
+                cmd.Parameters.AddWithValue("MoviePrice", movie.Price);
+                cmd.Parameters.AddWithValue("MovieReleaseDate", movie.ReleaseDate);
+                
 
                 conn.Open();
                 var newFormedId = cmd.ExecuteScalar();
@@ -51,142 +54,131 @@ namespace VideostoreDB.Repository.Interfaces
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM Movie WHERE MovieId = @MovieId";
+
+            Connection();
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("MovieId", id);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
 
         public IEnumerable<Movie> GetAll()
         {
-            string queryMovie = "SELECT * FROM Movie m JOIN Genre g ON m.GenreId = g.GenreId;";
-            string queryGenre = "SELECT * FROM Genre;";
+            string query = "SELECT * FROM Movie m, Genre g WHERE m.GenreId = g.GenreId";
+            Connection();
 
-            connection();
-
-            DataSet dsM = new DataSet();
-            DataTable dtM = new DataTable();
-
-            DataSet dsG = new DataSet();
-            DataTable dtG = new DataTable();
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = queryMovie;
+                cmd.CommandText = query;
 
-                SqlDataAdapter dataAdapterM = new SqlDataAdapter();
-                dataAdapterM.SelectCommand = cmd;
-                dataAdapterM.Fill(dsM, "Movie");
-                dtM = dsM.Tables["Movie"];
+                SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                dataAdapter.SelectCommand = cmd;
 
-                cmd.CommandText = queryGenre;
-
-                SqlDataAdapter dataAdapterG = new SqlDataAdapter();
-                dataAdapterG.SelectCommand = cmd;
-                dataAdapterG.Fill(dsG, "Genre");
-                dtG = dsG.Tables["Genre"];
+                dataAdapter.Fill(ds, "Movie");
+                dt = ds.Tables["Movie"];
 
                 conn.Close();
             }
 
             List<Movie> movieList = new List<Movie>();
-            List<Genre> genreList = new List<Genre>();
 
-            foreach (DataRow dataRow in dtG.Rows)
-            {
-                int genreId = int.Parse(dataRow["GenreId"].ToString());
-                string genreName = dataRow["GenreName"].ToString();
-
-                genreList.Add(new Genre { GenreId = genreId, Name = genreName});
-            }
-
-            foreach (DataRow dataRow in dtM.Rows)
+            foreach (DataRow dataRow in dt.Rows)
             {
                 int movieId = int.Parse(dataRow["MovieId"].ToString());
-                int genreId = int.Parse(dataRow["GenreId"].ToString());
                 string movieName = dataRow["MovieName"].ToString();
                 decimal moviePrice = decimal.Parse(dataRow["MoviePrice"].ToString());
+                int genreId = int.Parse(dataRow["GenreId"].ToString());
+                string genreName = dataRow["GenreName"].ToString();
                 int movieReleaseDate = int.Parse(dataRow["MovieReleaseDate"].ToString());
 
-                foreach (Genre g in genreList)
+                Genre genre = new Genre()
                 {
-                    if (genreId == g.GenreId)
-                    {
-                        movieList.Add(new Movie { MovieId = movieId, Genre = g, Name = movieName, Price = moviePrice, ReleaseDate = movieReleaseDate });
+                    GenreId = genreId,
+                    GenreName = genreName
+                };
 
-                    }
-                }
+                movieList.Add(new Movie { MovieId = movieId, Genre = genre, Name = movieName, Price = moviePrice, ReleaseDate = movieReleaseDate });
             }
-            
+
             return movieList;
         }
 
         public Movie GetById(int id)
         {
-            string queryMovie = "SELECT * FROM Movie m JOIN Genre g ON m.GenreId = g.GenreId WHERE m.MovieId = @MovieId;";
-            string queryGenre = "SELECT * FROM Genre;";
+            string query = "SELECT * FROM Movie m, Genre g WHERE m.MovieId = @Id AND m.GenreId = g.GenreId";
+            Connection();
 
-            connection();
-
-            DataSet dsM = new DataSet();
-            DataTable dtM = new DataTable();
-
-            DataSet dsG = new DataSet();
-            DataTable dtG = new DataTable();
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = queryMovie;
-                cmd.Parameters.AddWithValue("@MovieId", id);
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("Id", id);
 
-                SqlDataAdapter dataAdapterM = new SqlDataAdapter();
-                dataAdapterM.SelectCommand = cmd;
-                dataAdapterM.Fill(dsM, "Movie");
-                dtM = dsM.Tables["Movie"];
+                SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                dataAdapter.SelectCommand = cmd;
 
-                cmd.CommandText = queryGenre;
-
-                SqlDataAdapter dataAdapterG = new SqlDataAdapter();
-                dataAdapterG.SelectCommand = cmd;
-                dataAdapterG.Fill(dsG, "Genre");
-                dtG = dsG.Tables["Genre"];
+                dataAdapter.Fill(ds, "Movie");
+                dt = ds.Tables["Movie"];
 
                 conn.Close();
             }
 
             Movie movie = null;
-            MovieGenreViewModel movieGenreViewModel = null;
-            List<Genre> genreList = new List<Genre>();
 
-            foreach (DataRow dataRow in dtG.Rows)
-            {
-                int genreId = int.Parse(dataRow["GenreId"].ToString());
-                string genreName = dataRow["GenreName"].ToString();
-
-                genreList.Add(new Genre { GenreId = genreId, Name = genreName});
-            }
-
-            foreach (DataRow dataRow in dtM.Rows)
+            foreach (DataRow dataRow in dt.Rows)
             {
                 int movieId = int.Parse(dataRow["MovieId"].ToString());
-                int genreId = int.Parse(dataRow["GenreId"].ToString());
                 string movieName = dataRow["MovieName"].ToString();
                 decimal moviePrice = decimal.Parse(dataRow["MoviePrice"].ToString());
+                int genreId = int.Parse(dataRow["GenreId"].ToString());
+                string genreName = dataRow["GenreName"].ToString();
                 int movieReleaseDate = int.Parse(dataRow["MovieReleaseDate"].ToString());
 
-                foreach (Genre g in genreList)
+                Genre genre = new Genre()
                 {
-                    if (genreId == g.GenreId)
-                    {
-                        movie = new Movie { MovieId = movieId, Genre = g, Name = movieName, Price = moviePrice, ReleaseDate = movieReleaseDate };
-                        movieGenreViewModel = new MovieGenreViewModel { Movie = movie, Genres = genreList, SelectedGenreId = genreId};
-                    }
-                }
+                    GenreId = genreId,
+                    GenreName = genreName
+                };
+
+                movie = new Movie { MovieId = movieId, Genre = genre, Name = movieName, Price = moviePrice, ReleaseDate = movieReleaseDate };
+
             }
-            
+
             return movie;
         }
 
         public void Update(Movie movie)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE Movie SET MovieName = @Name, MoviePrice = @Price, GenreId = @GenreId, MovieReleaseDate = @ReleaseDate" +
+                                " WHERE MovieId = @Id";
+            Connection();
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;
+
+                cmd.Parameters.AddWithValue("Name", movie.Name);
+                cmd.Parameters.AddWithValue("Price", movie.Price);
+                cmd.Parameters.AddWithValue("GenreId", movie.Genre.GenreId);
+                cmd.Parameters.AddWithValue("ReleaseDate", movie.ReleaseDate);
+                cmd.Parameters.AddWithValue("Id", movie.MovieId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
     }
 }

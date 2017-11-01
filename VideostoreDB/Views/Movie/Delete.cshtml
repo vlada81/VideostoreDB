@@ -1,4 +1,4 @@
-﻿@model VideostoreDB.Models.Genre
+﻿@model VideostoreDB.Models.Movie
 
 @{
     ViewBag.Title = "Delete";
@@ -6,26 +6,26 @@
 
 <h2>Delete</h2>
 
-<form class="form-horizontal" method="post" action="/genre/delete/@Model.GenreId">
+<form class="form-horizontal" method="post" action="/movie/delete/@Model.MovieId">
     <fieldset>
         <legend>Are You sure you want to delete?</legend>
         <!-- START    Dodali smo polje ID kako bi preneo taj podatak Akciji, ali smo ga postavli na hidden da se nevidi na formi  -->
         <div class="form-group" hidden>
             <label for="id" class="col-lg-2 control-label">Id</label>
             <div class="col-lg-10">
-                <input type="text" class="form-control" name="GenreId" value="@Model.GenreId" />
+                <input type="text" class="form-control" name="MovieId" value="@Model.MovieId" />
             </div>
         </div>
         <!--  END  -->
         <div class="form-group">
-            <label for="name" class="col-lg-2 control-label">Genre</label>
+            <label for="name" class="col-lg-2 control-label">Movie</label>
             <div class="col-lg-10">
-                <input type="text" class="form-control" name="GenreName" value="@Model.GenreName" readonly />
+                <input type="text" class="form-control" name="Name" value="@Model.Name" readonly />
             </div>
         </div>
         <div class="form-group">
             <div class="col-lg-10 col-lg-offset-2">
-                <a class="btn btn-default" href="/genre/index">Cancel</a>
+                <a class="btn btn-default" href="/movie/index">Cancel</a>
                 <input type="submit" class="btn btn-primary" value="Delete" />
             </div>
         </div>

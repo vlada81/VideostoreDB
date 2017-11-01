@@ -1,0 +1,56 @@
+﻿@using VideostoreDB.Models
+@model VideostoreDB.ViewModel.MovieGenreViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Add a Movie</h2>
+<br />
+
+@using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <fieldset>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Movie.Name, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(m => m.Movie.Name, new { @class = "form-control", @placeholder = "Enter movie name", @required = "true" })
+                @Html.ValidationMessageFor(m => m.Movie.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Movie.Price, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(m => m.Movie.Price, new { @class = "form-control", @placeholder = "Enter movie price", @required = "true" })
+                @Html.ValidationMessageFor(m => m.Movie.Price)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Movie.Genre, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.DropDownListFor(m => m.Movie.Genre.GenreId, new SelectList(Model.Genres, "GenreId", "GenreName"), "Select movie genre", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Movie.Genre.GenreId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Movie.ReleaseDate, new { @class = "col-lg-2 control-label" })
+            <div class="col-lg-10">
+                @Html.TextBoxFor(m => m.Movie.ReleaseDate, new { @class = "form-control", @placeholder = "Enter movie release year", @required = "true" })
+                @Html.ValidationMessageFor(m => m.Movie.ReleaseDate)
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.Movie.MovieId)
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+                <a class="btn btn-default" href="/movie/index">Cancel</a>
+                <input type="submit" class="btn btn-primary" value="Create" />
+            </div>
+        </div>
+    </fieldset>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

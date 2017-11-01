@@ -154,8 +154,6 @@
     <Compile Include="Repository\GenreRepo.cs" />
     <Compile Include="Repository\Interfaces\IGenreRepository.cs" />
     <Compile Include="Repository\Interfaces\IMovieRepository.cs" />
-    <Compile Include="Repository\Interfaces\IMovieGenreVMRepository.cs" />
-    <Compile Include="Repository\MovieGenreVMRepo.cs" />
     <Compile Include="Repository\MovieRepo.cs" />
     <Compile Include="ViewModel\MovieGenreViewModel.cs" />
   </ItemGroup>
@@ -443,6 +441,9 @@
     <Content Include="Views\Movie\Edit.cshtml" />
     <Content Include="Views\Genre\Create.cshtml" />
     <Content Include="Views\Genre\Delete.cshtml" />
+    <Content Include="Views\Genre\Edit.cshtml" />
+    <Content Include="Views\Movie\Create.cshtml" />
+    <Content Include="Views\Movie\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,6 +29,11 @@ namespace VideostoreDB.Controllers
         [HttpPost]
         public ActionResult Create(Genre genre)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(genre);
+            }
+
             if (genreRepo.Create(genre))
             {
                 return RedirectToAction("Index");
@@ -37,19 +42,53 @@ namespace VideostoreDB.Controllers
             return View("Error");
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Edit(int id)
         {
-            genreRepo.Delete(id);
-            return View();
+            var genre = genreRepo.GetById(id);
+
+            return View(genre);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection form)
+        public ActionResult Edit(FormCollection form)
         {
-            int genreId = int.Parse(Request.Form["Name"]);
-            genreRepo.Delete(genreId);
-            
-            return RedirectToAction("Index");
+            var genre = new Genre();
+
+            try
+            {
+                UpdateModel(genre);
+
+                genreRepo.Update(genre);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(genre);
+            }
         }
+
+        public ActionResult Delete(int id)
+        {
+            var genre = genreRepo.GetById(id);
+            return View(genre);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(Genre genre)
+        {
+            try
+            {
+                genreRepo.Delete(genre.GenreId);
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return RedirectToAction("Index");
+            }
+        }
+
+        
+        
     }
 }

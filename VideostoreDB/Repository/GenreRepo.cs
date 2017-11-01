@@ -13,7 +13,7 @@ namespace VideostoreDB.Repository
     public class GenreRepo : IGenreRepository
     {
         private SqlConnection conn;
-        private void connection()
+        private void Connection()
         {
             string conString = ConfigurationManager.ConnectionStrings["VideostoreDBContext"].ToString();
             conn = new SqlConnection(conString);
@@ -25,12 +25,12 @@ namespace VideostoreDB.Repository
             string query = "INSERT INTO Genre (GenreName) VALUES (@GenreName);";
             query += " SELECT SCOPE_IDENTITY()";
 
-            connection();
+            Connection();
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@GenreName", genre.Name);
+                cmd.Parameters.AddWithValue("@GenreName", genre.GenreName);
 
                 conn.Open();
                 var newFormedId = cmd.ExecuteScalar();
@@ -48,11 +48,8 @@ namespace VideostoreDB.Repository
         /*  GET ALL GENRE    */
         public IEnumerable<Genre> GetAll()
         {
-            List<Genre> genreList = new List<Genre>();
-
-
             string query = "SELECT * FROM Genre;";
-            connection();
+            Connection();
 
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
@@ -69,12 +66,14 @@ namespace VideostoreDB.Repository
                 conn.Close();
             }
 
+            List<Genre> genreList = new List<Genre>();
+
             foreach (DataRow dr in dt.Rows)
             {
                 int genreId = int.Parse(dr["GenreId"].ToString());
                 string genreName = dr["GenreName"].ToString();
 
-                genreList.Add(new Genre() { GenreId = genreId, Name = genreName });
+                genreList.Add(new Genre() { GenreId = genreId, GenreName = genreName });
             }
 
             return genreList;
@@ -83,10 +82,8 @@ namespace VideostoreDB.Repository
         /*  GET GENRE BY ID   */
         public Genre GetById(int id)
         {
-            Genre genre = null;
-
             string query = "SELECT * FROM Genre g WHERE g.GenreId = @GenreId;";
-            connection();
+            Connection();
 
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
@@ -94,20 +91,24 @@ namespace VideostoreDB.Repository
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@GenreID", id);
+                cmd.Parameters.AddWithValue("GenreId", id);
 
                 SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                dataAdapter.SelectCommand = cmd;
+
                 dataAdapter.Fill(ds, "Genre");
                 dt = ds.Tables["Genre"];
                 conn.Close();
             }
+
+            Genre genre = null;
 
             foreach (DataRow dr in dt.Rows)
             {
                 int genreId = int.Parse(dr["GenreId"].ToString());
                 string genreName = dr["GenreName"].ToString();
 
-                genre = new Genre() { GenreId = genreId, Name = genreName };
+                genre = new Genre() { GenreId = genreId, GenreName = genreName };
             }
 
             return genre;
@@ -116,7 +117,21 @@ namespace VideostoreDB.Repository
         /*  EDIT GENRE    */
         public void Update(Genre genre)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE Genre SET GenreName = @Name WHERE GenreId = @GenreId";
+
+            Connection();
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;
+          
+                cmd.Parameters.AddWithValue("Name", genre.GenreName);
+                cmd.Parameters.AddWithValue("GenreId", genre.GenreId);
+
+                conn.Open();
+                cmd.ExecuteScalar();
+                conn.Close();
+            }
         }
 
         /*  DELETE GENRE    */
@@ -124,16 +139,15 @@ namespace VideostoreDB.Repository
         {
             string query = "DELETE FROM Genre WHERE GenreId = @GenreId;";
 
-            connection();
+            Connection();
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
                 cmd.CommandText = query;
-                cmd.Parameters.AddWithValue("@GenreId", id);
+                cmd.Parameters.AddWithValue("GenreId", id);
 
                 conn.Open();
                 cmd.ExecuteScalar();
-                //cmd.ExecuteNonQuery();
                 conn.Close();
 
             }

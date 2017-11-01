@@ -13,7 +13,7 @@ namespace VideostoreDB.Controllers
     public class MovieController : Controller
     {
         IMovieRepository movieRepo = new MovieRepo();
-        IMovieGenreVMRepository movieGenreVMRepo = new MovieGenreVMRepo();
+        IGenreRepository genreRepo = new GenreRepo();
 
         // GET: Movie
         public ActionResult Index()
@@ -25,16 +25,85 @@ namespace VideostoreDB.Controllers
 
         public ActionResult Details(int id)
         {
-            var movieGenreVM = movieGenreVMRepo.GetById(id);
+            var movie = movieRepo.GetById(id);
+
+            return View(movie);
+        }
+
+        public ActionResult Create()
+        {
+            var genres = genreRepo.GetAll();
+
+            var movieGenreVM = new MovieGenreViewModel
+            {
+                Genres = genres
+            };
 
             return View(movieGenreVM);
         }
 
+        [HttpPost]
+        public ActionResult Create(Movie movie)
+        {
+            if (!ModelState.IsValid)
+            {
+                movieRepo.Create(movie);
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
         public ActionResult Edit(int id)
         {
-            var movieGenreVM = movieGenreVMRepo.GetById(id);
+            var movie = movieRepo.GetById(id);
+            var genres = genreRepo.GetAll();
+
+            var movieGenreVM = new MovieGenreViewModel()
+            {
+                Movie = movie,
+                Genres = genres
+            };
 
             return View(movieGenreVM);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Movie movie)
+        {
+            try
+            {
+                movieRepo.Update(movie);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var movie = movieRepo.GetById(id);
+            return View(movie);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(Movie movie)
+        {
+            try
+            {
+                movieRepo.Delete(movie.MovieId);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index");
+            }
+            
         }
     }
 }

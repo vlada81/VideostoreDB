@@ -29,7 +29,7 @@
                 <td>@movie.MovieId</td>
                 <td>@Html.ActionLink(movie.Name, "Details", new { id = movie.MovieId })</td>
                 <td>@movie.Price</td>
-                <td>@movie.Genre.Name</td>
+                <td>@movie.Genre.GenreName</td>
                 <td>@movie.ReleaseDate</td>
                 <td>@Html.ActionLink("Edit", "Edit", new { id = movie.MovieId })</td>
                 <td>@Html.ActionLink("Delete", "Delete", new { id = movie.MovieId })</td>

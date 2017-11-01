@@ -1,4 +1,4 @@
-﻿@model VideostoreDB.ViewModel.MovieGenreViewModel
+﻿@model VideostoreDB.Models.Movie
 
 @{
     ViewBag.Title = "Details";
@@ -13,32 +13,26 @@
                 <h3>Title: </h3>
             </div>
             <div class="col-md-push-6">
-                <h3>@Model.Movie.Name</h3>
+                <h3>@Model.Name</h3>
             </div>
             <hr />
             <div class="col-md-4">
                 <h5>Price: </h5>
             </div>
             <div class="col-md-6">
-                <h5>@Model.Movie.Price</h5>
+                <h5>@Model.Price</h5>
             </div>
             <div class="col-md-4">
                 <h5>Genre: </h5>
             </div>
             <div class="col-md-6">
-                @foreach (var g in Model.Genres)
-            {
-                if (g.GenreId == Model.SelectedGenreId)
-                {
-                        <h5>@g.Name</h5>
-                    }
-                }
+                <h5>@Model.Genre.GenreName</h5>
             </div>
             <div class="col-md-4">
                 <h5>Release Date: </h5>
             </div>
             <div class="col-md-6">
-                <h5>@Model.Movie.ReleaseDate</h5>
+                <h5>@Model.ReleaseDate</h5>
             </div>
             <div class="col-md-6">
 

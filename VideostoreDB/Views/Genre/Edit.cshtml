@@ -1,0 +1,34 @@
+﻿@model VideostoreDB.Models.Genre
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit a Genre</h2>
+<br />
+<form class="form-horizontal" method="post" action="/genre/edit">
+    <fieldset>
+        <legend>Edit genre: @Model.GenreName</legend>
+        <!-- START    Dodali smo polje ID kako bi preneo taj podatak Akciji, ali smo ga postavli na "hidden" da se nevidi na formi
+            S obzirom da smo dodali GenreId u "action" forme nema potrebe za poljem ID.     -->
+        <div class="form-group" hidden>
+            <label for="id" class="col-lg-2 control-label">Id</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" name="GenreId" value="@Model.GenreId" />
+            </div>
+        </div>
+        <!--  END  -->
+        <div class="form-group">
+            <label for="name" class="col-lg-2 control-label">Name</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" name="GenreName" value="@Model.GenreName" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+                <a class="btn btn-default" href="/genre/index">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

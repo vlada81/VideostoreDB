@@ -10,9 +10,7 @@ namespace VideostoreDB.ViewModel
     public class MovieGenreViewModel
     {
         public Movie Movie { get; set; }
-        public List<Genre> Genres { get; set; }
+        public IEnumerable<Genre> Genres { get; set; }
         public int SelectedGenreId { get; set; }
-
-
     }
 }

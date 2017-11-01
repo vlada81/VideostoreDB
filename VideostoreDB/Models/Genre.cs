@@ -9,9 +9,10 @@ namespace VideostoreDB.Models
     public class Genre
     {
         [Key]
+        [Required(ErrorMessage = "Please select movie genre")]
         public int GenreId { get; set; }
-        [Required(ErrorMessage = "Enter name")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "Please enter name")]
+        public string GenreName { get; set; }
 
     }
 }
